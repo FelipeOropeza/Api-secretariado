@@ -1,7 +1,8 @@
 import express from "express";
+import usuariosRoutes from "./usuarios.js";
 
-const routes = (app) => {
-  app.route("/").get((req, res) => res.status(200).send("Api Secretariado"));
+const router = (app) => {
+  app.use(express.json(), usuariosRoutes);
 };
 
-export default routes;
+export default router;
