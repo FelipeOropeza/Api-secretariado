@@ -13,3 +13,10 @@ model usuarios  {
   ra       String  @unique
   senha    String
 }
+
+model produtos{
+  id       Int      @id @default(autoincrement())
+  nome     String
+  preco    Float
+  qtd     Int @default(0)
+}
