@@ -1,31 +1,47 @@
 class FilaMemoria {
-  constructor() {
-    this.fila = [];
-    this.processando = false;
-  }
-
-  adicionar(item) {
-    this.fila.push(item);
-    if (!this.processando) {
-      this.processar();
+    constructor() {
+      this.filas = {};
+    }
+  
+    getFila(idProduto) {
+      if (!this.filas[idProduto]) {
+        this.filas[idProduto] = {
+          fila: [],
+          processando: false,
+        };
+      }
+      return this.filas[idProduto];
+    }
+  
+    adicionar(idProduto, item) {
+      const filaProduto = this.getFila(idProduto);
+      filaProduto.fila.push(item);
+  
+      if (!filaProduto.processando) {
+        this.processar(idProduto);
+      }
+    }
+  
+    async processar(idProduto) {
+      const filaProduto = this.getFila(idProduto);
+      if (filaProduto.fila.length > 0) {
+        filaProduto.processando = true;
+  
+        const item = filaProduto.fila.shift();
+  
+        try {
+          await item();
+        } catch (error) {
+          console.error(`Erro ao processar a operação para o produto ${idProduto}:`, error);
+        }
+  
+        this.processar(idProduto);
+      } else {
+        filaProduto.processando = false;
+      }
     }
   }
-
-  async processar() {
-    if (this.fila.length > 0) {
-      this.processando = true;
-
-      const item = this.fila.shift();
-
-      await item();
-
-      this.processar();
-    } else {
-      this.processando = false;
-    }
-  }
-}
-
-const filaMemoria = new FilaMemoria();
-
-export default filaMemoria;
+  
+  const filaMemoria = new FilaMemoria();
+  export default filaMemoria;
+  
