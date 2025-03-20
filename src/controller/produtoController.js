@@ -4,11 +4,17 @@ import {
   updateProduto,
 } from "../service/produtoService.js";
 
+import filaMemoria from "../queue/filaMemoria.js";
+
 class ProdutoController {
   static async listarProdutos(req, res) {
+    try{
     const produtos = await getAllProdutos();
 
     res.status(200).json(produtos);
+    } catch (error){
+      res.status(500).json({ error: "Erro ao buscar produtos" });
+    }
   }
 
   static async criarProduto(req, res) {
@@ -32,17 +38,28 @@ class ProdutoController {
       const { nome, quantidade, tipo } = req.body;
       const idConvertido = parseInt(id);
 
-      const produtoAtualizado = await updateProduto(
-        idConvertido,
-        nome,
-        quantidade,
-        tipo
-      );
-      const produtosAtualizados = await getAllProdutos();
+      filaMemoria.adicionar(async () => {
+        const produtoAtualizado = await updateProduto(
+          idConvertido,
+          nome,
+          quantidade,
+          tipo
+        );
 
-      global.io.emit("updateProdutos", produtosAtualizados);
+        if (!produtoAtualizado) {
+          return res
+            .status(400)
+            .json({ error: "Falha ao atualizar o produto" });
+        }
 
-      res.status(200).json(produtoAtualizado);
+        console.log("sucesso");
+
+        const produtosAtualizados = await getAllProdutos();
+
+        global.io.emit("updateProdutos", produtosAtualizados);
+
+        res.status(200).json(produtoAtualizado);
+      });
     } catch (error) {
       res.status(500).json({ error: "Erro ao criar produto" });
     }
