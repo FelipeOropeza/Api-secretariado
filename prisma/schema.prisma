@@ -20,3 +20,12 @@ model produtos{
   preco    Float
   qtd     Int @default(0)
 }
+
+model produtosHistorico{
+  id Int @id @default(autoincrement())
+  nomeProd String
+  tipoMovimento String // Entrada ou Saida
+  qtd Int
+  nomeUser String
+  data DateTime @default(now())
+}
