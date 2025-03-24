@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import {
-  getAllProdutos,
+  getAll,
   createProduto,
   updateProduto,
 } from "../service/produtoService";
@@ -10,7 +10,7 @@ class ProdutoController {
   // Listar produtos
   static async listarProdutos(req: Request, res: Response): Promise<void> {
     try {
-      const produtos = await getAllProdutos();
+      const produtos = await getAll();
       res.status(200).json(produtos);
     } catch (error) {
       res.status(500).json({ error: "Erro ao buscar produtos" });
@@ -23,7 +23,7 @@ class ProdutoController {
       const { nome, preco } = req.body;
       const precoConvertido = parseFloat(preco);
       const novoProduto = await createProduto(nome, precoConvertido);
-      const produtosAtualizados = await getAllProdutos();
+      const produtosAtualizados = await getAll();
 
       global.io.emit("updateProdutos", produtosAtualizados);
 
@@ -56,7 +56,7 @@ class ProdutoController {
 
         console.log("Produto atualizado com sucesso!");
 
-        const produtosAtualizados = await getAllProdutos();
+        const produtosAtualizados = await getAll();
 
         global.io.emit("updateProdutos", produtosAtualizados);
 

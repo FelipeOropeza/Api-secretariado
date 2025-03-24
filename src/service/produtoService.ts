@@ -1,53 +1,63 @@
 import prisma from "../config/database.js"; // Corrigido para importação nomeada
 
-export const getAllProdutos = async () => {
-  return await prisma.produtos.findMany();
+export const getAll = async () => {
+  return await prisma.products.findMany();
 };
 
-export const createProduto = async (nome, preco) => {
-  return await prisma.produtos.create({
-    data: { nome: nome, preco: preco, qtd: 0 },
+export const createProduto = async (nome: string, preco: number) => {
+  return await prisma.products.create({
+    data: { name: nome, price: preco, amount: 0 },
   });
 };
 
-export const updateProduto = async (id, nome, quantidade, tipo) => {
-  const produto = await prisma.produtos.findUnique({
+export const updateProduto = async (
+  id: number,
+  nomeUsuario: string,
+  quantidade: number,
+  tipo: string
+) => {
+  const produto = await prisma.products.findUnique({
     where: { id: id },
-    select: { qtd: true, nome: true },
+    select: { amount: true, name: true },
   });
+
+  if (!produto) {
+    return false;
+  }
 
   if (tipo === "entrada") {
-    await prisma.produtosHistorico.create({
+    await prisma.productsHistory.create({
       data: {
-        nomeProd: produto.nome,
-        tipoMovimento: tipo,
-        qtd: quantidade,
-        nomeUser: nome,
+        productname: produto.name,
+        typeMovement: tipo,
+        amount: quantidade,
+        username: nomeUsuario,
       },
     });
-    return await prisma.produtos.update({
+
+    return await prisma.products.update({
       where: { id: id },
-      data: { qtd: produto.qtd + quantidade },
+      data: { amount: produto.amount + quantidade },
     });
   } else if (tipo === "saida") {
-    if (produto.qtd >= quantidade) {
-      await prisma.produtosHistorico.create({
+    if (produto.amount >= quantidade) {
+      await prisma.productsHistory.create({
         data: {
-          nomeProd: produto.nome,
-          tipoMovimento: tipo,
-          qtd: quantidade,
-          nomeUser: nome,
+          productname: produto.name,
+          typeMovement: tipo,
+          amount: quantidade,
+          username: nomeUsuario,
         },
       });
 
-      return await prisma.produtos.update({
+      return await prisma.products.update({
         where: { id: id },
-        data: { qtd: produto.qtd - quantidade },
+        data: { amount: produto.amount - quantidade },
       });
     } else {
-      return false;
+      return false; // Quantidade insuficiente para a saída
     }
   } else {
-    return false;
+    return false; // Tipo inválido
   }
 };

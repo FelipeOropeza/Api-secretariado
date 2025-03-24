@@ -3,8 +3,8 @@ import ProdutoController from "../controller/produtoController";
 
 const routes: Router = express.Router();
 
-routes.get("/produtos", ProdutoController.listarProdutos);
-routes.post("/produtos", ProdutoController.criarProduto);
-routes.put("/produtos/:id", ProdutoController.atualizarProduto);
+routes.get("/", ProdutoController.listarProdutos);
+routes.post("/", ProdutoController.criarProduto);
+routes.put("//:id", ProdutoController.atualizarProduto);
 
 export default routes;
