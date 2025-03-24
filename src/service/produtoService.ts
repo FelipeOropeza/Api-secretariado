@@ -1,4 +1,4 @@
-import { prisma } from "../config/database.js"; // Corrigido para importação nomeada
+import prisma from "../config/database.js"; // Corrigido para importação nomeada
 
 export const getAllProdutos = async () => {
   return await prisma.produtos.findMany();

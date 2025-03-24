@@ -1,7 +1,7 @@
-import express from "express";
-import ProdutoController from "../controller/produtoController.js";
+import express, { Router } from "express";
+import ProdutoController from "../controller/produtoController";
 
-const routes = express.Router();
+const routes: Router = express.Router();
 
 routes.get("/produtos", ProdutoController.listarProdutos);
 routes.post("/produtos", ProdutoController.criarProduto);

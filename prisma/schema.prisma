@@ -7,25 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model usuarios  {
+model users  {
   id       Int      @id @default(autoincrement())
-  nome     String
+  name     String
   ra       String  @unique
-  senha    String
+  password    String
 }
 
-model produtos{
+model products{
   id       Int      @id @default(autoincrement())
-  nome     String
-  preco    Float
-  qtd     Int @default(0)
+  name     String
+  price    Float
+  amount     Int @default(0)
 }
 
-model produtosHistorico{
+model productsHistory{
   id Int @id @default(autoincrement())
-  nomeProd String
-  tipoMovimento String // Entrada ou Saida
-  qtd Int
-  nomeUser String
-  data DateTime @default(now())
+  productname  String
+  typeMovement  String
+  amount Int
+  username String
+  dataMovement DateTime @default(now())
 }
