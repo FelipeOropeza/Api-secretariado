@@ -7,25 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users  {
-  id       Int      @id @default(autoincrement())
+model User {
+  id       Int    @id @default(autoincrement())
   name     String
-  ra       String  @unique
-  password    String
+  ra       String @unique
+  password String
+
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+
+  accountsPayable    AccountPayable[]
+  accountsReceivable AccountReceivable[]
 }
 
-model products{
-  id       Int      @id @default(autoincrement())
-  name     String
-  price    Float
-  amount     Int @default(0)
+model Company {
+  id   Int    @id @default(autoincrement())
+  name String
+  cnpj String @unique
+
+  users              User[]
+  accountsPayable    AccountPayable[]
+  accountsReceivable AccountReceivable[]
 }
 
-model productsHistory{
-  id Int @id @default(autoincrement())
-  productname  String
-  typeMovement  String
-  amount Int
-  username String
-  dataMovement DateTime @default(now())
+model AccountPayable {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Decimal
+  dueDate     DateTime
+  status      String   @default("pending")
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id])
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model AccountReceivable {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Decimal
+  dueDate     DateTime
+  status      String   @default("pending")
+  companyId   Int
+  company     Company  @relation(fields: [companyId], references: [id])
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 }

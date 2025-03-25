@@ -6,7 +6,7 @@ class UserRepository {
     ra: string,
     password: string
   ): Promise<User | null> {
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { ra },
     });
     if (user && user.password === password) {
