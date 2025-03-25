@@ -9,6 +9,7 @@ declare global {
 
 const server = http.createServer(app);
 
+// Configura o servidor WebSocket
 global.io = new Server(server, {
   cors: { origin: "*" },
 });

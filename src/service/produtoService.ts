@@ -1,13 +1,13 @@
-import prisma from "../config/database.js"; // Corrigido para importação nomeada
+import prisma from "../config/database.js";
+import ProductRepository from "../repositories/productRepository";
 
 export const getAll = async () => {
   return await prisma.products.findMany();
 };
 
-export const createProduto = async (nome: string, preco: number) => {
-  return await prisma.products.create({
-    data: { name: nome, price: preco, amount: 0 },
-  });
+export const createProduto = async (name: string, price: number) => {
+  const product = await ProductRepository.insertProduct(name, price);
+  return product;
 };
 
 export const updateProduto = async (

@@ -7,7 +7,6 @@ import {
 import filaMemoria from "../queue/filaMemoria";
 
 class ProdutoController {
-  // Listar produtos
   static async listarProdutos(req: Request, res: Response): Promise<void> {
     try {
       const produtos = await getAll();
@@ -17,16 +16,16 @@ class ProdutoController {
     }
   }
 
-  // Criar produto
   static async criarProduto(req: Request, res: Response): Promise<void> {
     try {
-      const { nome, preco } = req.body;
-      const precoConvertido = parseFloat(preco);
-      const novoProduto = await createProduto(nome, precoConvertido);
+      const { name, price } = req.body;
+      const priceConverted = parseFloat(price);
+      const novoProduto = await createProduto(name, priceConverted);
       const produtosAtualizados = await getAll();
 
       global.io.emit("updateProdutos", produtosAtualizados);
-
+      console.log("Emitiu evento updateProdutos", produtosAtualizados);
+      
       res.status(201).json(novoProduto);
     } catch (error) {
       res.status(500).json({ error: "Erro ao criar produto" });
