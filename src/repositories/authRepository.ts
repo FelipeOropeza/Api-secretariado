@@ -9,7 +9,7 @@ class UserRepository {
     const user = await prisma.user.findUnique({
       where: { ra },
     });
-    if (user && user.password === password) {
+    if (user) {
       return user;
     }
     return null;

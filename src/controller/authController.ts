@@ -6,13 +6,17 @@ class AuthController {
     const { ra, password } = req.body;
 
     try {
-      const user = await userIsValid(ra, password);
+      const result = await userIsValid(ra, password);
 
-      if (user) {
-        res.status(200).json({
-          message: "Usuário validado com sucesso!",
-          user: user,
-        });
+      if (result) {
+        const { user, token } = result;
+        if (user) {
+          res.status(200).json({
+            message: "Usuário validado com sucesso!",
+            user: user,
+            token: token,
+          });
+        }
       } else {
         res.status(401).json({ message: "Credenciais inválidas!" });
       }
