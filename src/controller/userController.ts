@@ -3,8 +3,9 @@ import { createUser } from "../service/userService";
 
 class UserController {
   static async userRegistration(req: Request, res: Response): Promise<void> {
-    const { name, ra, password, companyId } = req.body;
     try {
+      const { name, ra, password, companyId } = req.body;
+
       const user = await createUser(name, ra, password, companyId);
 
       if (user) {

@@ -3,9 +3,9 @@ import { userIsValid } from "../service/authService";
 
 class AuthController {
   static async login(req: Request, res: Response): Promise<void> {
-    const { ra, password } = req.body;
-
     try {
+      const { ra, password } = req.body;
+
       const result = await userIsValid(ra, password);
 
       if (result) {
