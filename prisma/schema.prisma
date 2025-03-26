@@ -16,8 +16,7 @@ model User {
   companyId Int
   company   Company @relation(fields: [companyId], references: [id])
 
-  accountsPayable    AccountPayable[]
-  accountsReceivable AccountReceivable[]
+  accounts Account[]
 }
 
 model Company {
@@ -25,29 +24,17 @@ model Company {
   name String
   cnpj String @unique
 
-  users              User[]
-  accountsPayable    AccountPayable[]
-  accountsReceivable AccountReceivable[]
+  users    User[]
+  accounts Account[]
 }
 
-model AccountPayable {
+model Account {
   id          Int      @id @default(autoincrement())
   description String
-  amount      Decimal
-  dueDate     DateTime
-  status      String   @default("pending")
-  companyId   Int
-  company     Company  @relation(fields: [companyId], references: [id])
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model AccountReceivable {
-  id          Int      @id @default(autoincrement())
-  description String
-  amount      Decimal
-  dueDate     DateTime
-  status      String   @default("pending")
+  amount      Float
+  dueDate     String
+  status      String   @default("pendente")
+  type        String
   companyId   Int
   company     Company  @relation(fields: [companyId], references: [id])
   userId      Int
