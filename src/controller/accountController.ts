@@ -18,6 +18,7 @@ class AccountController {
       );
 
       if (account) {
+        global.io.emit("accountCreated", account);
         res.status(200).json({
           message: "Conta criada com sucesso!",
           account: account,
