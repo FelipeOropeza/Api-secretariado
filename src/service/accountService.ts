@@ -21,3 +21,8 @@ export const createAccount = async (
 
   return account;
 };
+
+export const getAll = async () => {
+  const account = AccountRepository.getAll();
+  return account;
+}

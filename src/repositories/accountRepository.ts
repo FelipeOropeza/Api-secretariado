@@ -12,22 +12,26 @@ class AccountRepository {
     userId: number
   ): Promise<Account | null> {
     const account = await prisma.account.create({
-        data: {
-            description: description,
-            amount: amount,
-            dueDate: dueDate,
-            status: status,
-            type: type,
-            companyId: companyId,
-            userId: userId,
-        },
-    })
+      data: {
+        description: description,
+        amount: amount,
+        dueDate: dueDate,
+        status: status,
+        type: type,
+        companyId: companyId,
+        userId: userId,
+      },
+    });
 
-    if(account){
-        return account;
+    if (account) {
+      return account;
     }
 
     return null;
+  }
+
+  static async getAll(): Promise<Account[]> {
+    return await prisma.account.findMany();
   }
 }
 
