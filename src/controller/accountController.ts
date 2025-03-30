@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createAccount, getAll } from "../service/accountService";
+import { createAccount, getAll, getSum } from "../service/accountService";
 
 class AccountController {
   static async createAccount(req: Request, res: Response): Promise<void> {
@@ -42,6 +42,18 @@ class AccountController {
       }
     } catch (error) {
       res.status(500).json({ message: "Erro ao selecionar contas", error });
+    }
+  }
+
+  static async getSum(req: Request, res: Response) : Promise<void> {
+    try {
+      const account = await getSum();
+
+      if(account){
+        res.status(200).json(account);
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao pegar a soma das contas", error });
     }
   }
 }

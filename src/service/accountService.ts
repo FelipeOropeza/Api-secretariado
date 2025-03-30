@@ -26,6 +26,10 @@ export const createAccount = async (
 };
 
 export const getAll = async () => {
-  const account = AccountRepository.getAll();
+  const account = await AccountRepository.getAll();
   return account;
+};
+
+export const getSum = async () => {
+  return await AccountRepository.getSum();
 };
