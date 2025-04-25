@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { createAccount, getAll, getSum } from "../service/accountService";
+import {
+  createAccount,
+  getAll,
+  getSum,
+  putAccount,
+} from "../service/accountService";
 
 class AccountController {
   static async createAccount(req: Request, res: Response): Promise<void> {
@@ -31,8 +36,8 @@ class AccountController {
     }
   }
 
-  static async getAll(req: Request, res: Response) : Promise<void>{
-    try{
+  static async getAll(req: Request, res: Response): Promise<void> {
+    try {
       const account = await getAll();
 
       if (account) {
@@ -45,15 +50,48 @@ class AccountController {
     }
   }
 
-  static async getSum(req: Request, res: Response) : Promise<void> {
+  static async getSum(req: Request, res: Response): Promise<void> {
     try {
       const account = await getSum();
 
-      if(account){
+      if (account) {
         res.status(200).json(account);
       }
     } catch (error) {
-      res.status(500).json({ message: "Erro ao pegar a soma das contas", error });
+      res
+        .status(500)
+        .json({ message: "Erro ao pegar a soma das contas", error });
+    }
+  }
+
+  static async updateAccount(req: Request, res: Response): Promise<void> {
+    try {
+      const { description, amount, dueDate, status, type, companyId, userId } =
+      req.body;
+      const id = parseInt(req.params.id, 10);
+
+      const account = await putAccount(
+        description,
+        amount,
+        dueDate,
+        status,
+        type,
+        companyId,
+        userId,
+        id
+      );
+
+      if (account) {
+        global.io.emit("accountCreated", account);
+        res.status(200).json({
+          message: "Conta atualizada com sucesso!",
+          account: account,
+        });
+      } else {
+        res.status(401).json({ message: "Credenciais inválidas!" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao atualizar a conta", error });
     }
   }
 }

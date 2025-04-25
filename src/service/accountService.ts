@@ -9,7 +9,7 @@ export const createAccount = async (
   companyId: number,
   userId: number
 ) => {
-  const today = new Date().toISOString().split("T")[0]; 
+  const today = new Date().toISOString().split("T")[0];
   const updatedStatus = dueDate === today ? "recebido" : status;
 
   const account = await AccountRepository.insertAccount(
@@ -32,4 +32,27 @@ export const getAll = async () => {
 
 export const getSum = async () => {
   return await AccountRepository.getSum();
+};
+
+export const putAccount = async (
+  description: string,
+  amount: number,
+  dueDate: string,
+  status: string,
+  type: string,
+  companyId: number,
+  userId: number,
+  id: number
+) => {
+  const account = await AccountRepository.updateAccount(
+    description,
+    amount,
+    dueDate,
+    status,
+    type,
+    companyId, 
+    userId,
+    id
+  );
+  return account;
 };

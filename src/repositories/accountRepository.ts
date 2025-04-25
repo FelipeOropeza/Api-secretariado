@@ -44,12 +44,44 @@ class AccountRepository {
         where: { type: "despesa", status: "pendente" },
       }),
     ]);
-  
+
     return {
       totalRecebido: totalRecebido._sum.amount || 0,
       despesasPendentes,
     };
-  }  
+  }
+
+  static async updateAccount(
+    description: string,
+    amount: number,
+    dueDate: string,
+    status: string,
+    type: string,
+    companyId: number,
+    userId: number,
+    id: number
+  ) : Promise<Account | null> {
+    const account = await prisma.account.update({
+      where: {
+        id: id,
+      },
+      data: {
+        description: description,
+        amount: amount,
+        dueDate: dueDate,
+        status: status,
+        type: type,
+        companyId: companyId,
+        userId: userId,
+      },
+    });
+
+    if (account) {
+      return account;
+    }
+
+    return null;
+  }
 }
 
 export default AccountRepository;
